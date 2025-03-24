@@ -1,0 +1,411 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Artists on Hire | Creative Talent Hub{% endblock %}
+
+{% block content %}
+<div class="artists-container">
+    <div class="artists-header">
+        <h1>Discover Exceptional Creative Talent</h1>
+        <p>Browse our curated selection of professional artists ready for your next project</p>
+        
+        <!-- <div class="search-filter">
+            <form method="GET" class="search-form">
+                <div class="search-input">
+                    <i class="fas fa-search"></i>
+                    <input type="text" name="q" placeholder="Search by skill, name, or keyword" value="{{ request.GET.q }}">
+                </div>
+                <!-- <select name="expertise">
+                    <option value="">All Categories</option>
+                    {% for category in categories %}
+                    <option value="{{ category }}" {% if request.GET.expertise == category %}selected{% endif %}>{{ category }}</option>
+                    {% endfor %}
+                <button type="submit" class="btn-search">Apply Filters</button>
+                {% if request.GET.q or request.GET.expertise %}
+                <a href="{% url 'hire_artists' %}" class="btn-clear">Clear All</a>
+                {% endif %}
+            </form>
+        </div> -->
+    </div>
+
+    <div class="artists-grid">
+        {% for artist in artists %}
+        <div class="artist-card">
+            <div class="artist-image">
+                {% if artist.image %}
+                <img src="{{ artist.image.url }}" alt="{{ artist.name }}">
+                {% else %}
+                <div class="artist-initials">{{ artist.name|slice:":2"|upper }}</div>
+                {% endif %}
+                <div class="artist-rating">
+                    <span class="stars">★★★★★</span>
+                    <span class="rating-value">4.8</span>
+                </div>
+            </div>
+            
+            <div class="artist-info">
+                <h3>{{ artist.name }}</h3>
+                <div class="artist-meta">
+                    <span class="expertise"><i class="fas fa-paint-brush"></i> {{ artist.expertise }}</span>
+                    <span class="location"><i class="fas fa-map-marker-alt"></i> {{ artist.location|default:"Remote" }}</span>
+                </div>
+                
+                <p class="artist-bio">{{ artist.bio|truncatechars:150 }}</p>
+                
+                <div class="artist-skills">
+                    {% for skill in artist.skills.all|slice:":3" %}
+                    <span class="skill-tag">{{ skill.name }}</span>
+                    {% endfor %}
+                    {% if artist.skills.count > 3 %}
+                    <span class="skill-tag">+{{ artist.skills.count|add:"-3" }} more</span>
+                    {% endif %}
+                </div>
+                
+                <!--  -->
+            </div>
+        </div>
+        {% empty %}
+        <div class="no-results">
+            <i class="fas fa-palette"></i>
+            <h3>No artists found matching your criteria</h3>
+            <p>Try adjusting your search filters or <a href="{% url 'hire_artists' %}">browse all artists</a></p>
+        </div>
+        {% endfor %}
+    </div>
+
+    {% if is_paginated %}
+    <div class="pagination">
+        {% if page_obj.has_previous %}
+        <a href="?page={{ page_obj.previous_page_number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}{% if request.GET.expertise %}&expertise={{ request.GET.expertise }}{% endif %}" class="page-link">
+            <i class="fas fa-chevron-left"></i> Previous
+        </a>
+        {% endif %}
+        
+        {% for num in page_obj.paginator.page_range %}
+        {% if page_obj.number == num %}
+        <span class="current-page">{{ num }}</span>
+        {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+        <a href="?page={{ num }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}{% if request.GET.expertise %}&expertise={{ request.GET.expertise }}{% endif %}" class="page-link">{{ num }}</a>
+        {% endif %}
+        {% endfor %}
+        
+        {% if page_obj.has_next %}
+        <a href="?page={{ page_obj.next_page_number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}{% if request.GET.expertise %}&expertise={{ request.GET.expertise }}{% endif %}" class="page-link">
+            Next <i class="fas fa-chevron-right"></i>
+        </a>
+        {% endif %}
+    </div>
+    {% endif %}
+</div>
+
+<style>
+    :root {
+        --primary-color: #6c5ce7;
+        --secondary-color: #636e72;
+        --light-color: #f5f6fa;
+        --border-radius: 8px;
+        --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        --transition: all 0.3s ease;
+    }
+    
+    .artists-container {
+        max-width: 1200px;
+        margin: 2rem auto;
+        padding: 0 1rem;
+    }
+    
+    .artists-header {
+        text-align: center;
+        margin-bottom: 3rem;
+    }
+    
+    .artists-header h1 {
+        font-size: 2.5rem;
+        color: var(--primary-color);
+        margin-bottom: 1rem;
+    }
+    
+    .artists-header p {
+        font-size: 1.1rem;
+        color: var(--secondary-color);
+        margin-bottom: 2rem;
+    }
+    
+    .search-filter {
+        background: white;
+        padding: 1.5rem;
+        border-radius: var(--border-radius);
+        box-shadow: var(--shadow);
+        margin: 0 auto;
+        max-width: 800px;
+    }
+    
+    .search-form {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 1rem;
+        align-items: center;
+    }
+    
+    .search-input {
+        flex: 1;
+        min-width: 250px;
+        position: relative;
+    }
+    
+    .search-input i {
+        position: absolute;
+        left: 15px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: var(--secondary-color);
+    }
+    
+    .search-input input {
+        width: 100%;
+        padding: 12px 15px 12px 45px;
+        border: 1px solid #ddd;
+        border-radius: var(--border-radius);
+        font-size: 1rem;
+    }
+    
+    .search-form select {
+        padding: 12px 15px;
+        border: 1px solid #ddd;
+        border-radius: var(--border-radius);
+        font-size: 1rem;
+        min-width: 200px;
+    }
+    
+    .btn-search {
+        padding: 12px 20px;
+        background-color: var(--primary-color);
+        color: white;
+        border: none;
+        border-radius: var(--border-radius);
+        cursor: pointer;
+        transition: var(--transition);
+    }
+    
+    .btn-search:hover {
+        background-color: #5649c0;
+    }
+    
+    .btn-clear {
+        padding: 12px 20px;
+        color: var(--secondary-color);
+        text-decoration: none;
+        border-radius: var(--border-radius);
+        transition: var(--transition);
+    }
+    
+    .btn-clear:hover {
+        color: var(--primary-color);
+    }
+    
+    .artists-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+        gap: 2rem;
+        margin: 3rem 0;
+    }
+    
+    .artist-card {
+        background: white;
+        border-radius: var(--border-radius);
+        box-shadow: var(--shadow);
+        overflow: hidden;
+        transition: var(--transition);
+    }
+    
+    .artist-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+    }
+    
+    .artist-image {
+        position: relative;
+        height: 200px;
+        background-color: #f0f2f5;
+    }
+    
+    .artist-image img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+    
+    .artist-initials {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 100%;
+        font-size: 3rem;
+        font-weight: bold;
+        color: var(--primary-color);
+        background-color: #e6e9f2;
+    }
+    
+    .artist-rating {
+        position: absolute;
+        bottom: 10px;
+        right: 10px;
+        background: rgba(0, 0, 0, 0.7);
+        color: white;
+        padding: 5px 10px;
+        border-radius: var(--border-radius);
+        display: flex;
+        align-items: center;
+        gap: 5px;
+    }
+    
+    .stars {
+        color: #fdcb6e;
+    }
+    
+    .rating-value {
+        font-size: 0.9rem;
+    }
+    
+    .artist-info {
+        padding: 1.5rem;
+    }
+    
+    .artist-info h3 {
+        margin: 0 0 0.5rem;
+        font-size: 1.3rem;
+    }
+    
+    .artist-meta {
+        display: flex;
+        gap: 1rem;
+        margin-bottom: 1rem;
+        font-size: 0.9rem;
+        color: var(--secondary-color);
+    }
+    
+    .artist-meta i {
+        margin-right: 5px;
+    }
+    
+    .artist-bio {
+        color: var(--secondary-color);
+        margin-bottom: 1.5rem;
+        line-height: 1.5;
+    }
+    
+    .artist-skills {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+        margin-bottom: 1.5rem;
+    }
+    
+    .skill-tag {
+        background: var(--light-color);
+        color: var(--secondary-color);
+        padding: 5px 10px;
+        border-radius: 20px;
+        font-size: 0.8rem;
+    }
+    
+    .artist-actions {
+        display: flex;
+        gap: 1rem;
+    }
+    
+    .btn-view {
+        flex: 1;
+        padding: 10px;
+        background: white;
+        color: var(--primary-color);
+        border: 1px solid var(--primary-color);
+        border-radius: var(--border-radius);
+        text-align: center;
+        text-decoration: none;
+        transition: var(--transition);
+    }
+    
+    .btn-view:hover {
+        background: #f0f2ff;
+    }
+    
+    .btn-hire {
+        flex: 1;
+        padding: 10px;
+        background: var(--primary-color);
+        color: white;
+        border: 1px solid var(--primary-color);
+        border-radius: var(--border-radius);
+        text-align: center;
+        text-decoration: none;
+        transition: var(--transition);
+    }
+    
+    .btn-hire:hover {
+        background: #5649c0;
+    }
+    
+    .no-results {
+        grid-column: 1 / -1;
+        text-align: center;
+        padding: 3rem;
+    }
+    
+    .no-results i {
+        font-size: 3rem;
+        color: var(--primary-color);
+        margin-bottom: 1rem;
+    }
+    
+    .no-results h3 {
+        margin-bottom: 0.5rem;
+    }
+    
+    .no-results a {
+        color: var(--primary-color);
+    }
+    
+    .pagination {
+        display: flex;
+        justify-content: center;
+        gap: 1rem;
+        margin: 3rem 0;
+    }
+    
+    .page-link {
+        padding: 8px 15px;
+        border: 1px solid #ddd;
+        border-radius: var(--border-radius);
+        text-decoration: none;
+        color: var(--secondary-color);
+        transition: var(--transition);
+    }
+    
+    .page-link:hover {
+        background: var(--light-color);
+    }
+    
+    .current-page {
+        padding: 8px 15px;
+        background: var(--primary-color);
+        color: white;
+        border-radius: var(--border-radius);
+    }
+    
+    @media (max-width: 768px) {
+        .artists-grid {
+            grid-template-columns: 1fr;
+        }
+        
+        .search-form {
+            flex-direction: column;
+            align-items: stretch;
+        }
+        
+        .artist-actions {
+            flex-direction: column;
+        }
+    }
+</style>
+{% endblock %}

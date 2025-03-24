@@ -1,0 +1,430 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Register | Artist Platform{% endblock %}
+
+{% block content %}
+<div class="auth-container">
+    <div class="auth-card">
+        <div class="auth-header">
+            <h2>Join Our Creative Community</h2>
+            <p>Create an account to showcase your work or hire talented artists</p>
+        </div>
+
+        <form method="POST" class="auth-form">
+            {% csrf_token %}
+            
+            {% if form.errors %}
+            <div class="alert alert-error">
+                <i class="fas fa-exclamation-circle"></i>
+                Please correct the errors below
+            </div>
+            {% endif %}
+            
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="{{ form.username.id_for_label }}">Username</label>
+                    <div class="input-with-icon">
+                        <i class="fas fa-user"></i>
+                        {{ form.username }}
+                    </div>
+                    {% if form.username.errors %}
+                    <div class="form-error">{{ form.username.errors.as_text }}</div>
+                    {% endif %}
+                </div>
+                
+                <div class="form-group">
+                    <label for="{{ form.email.id_for_label }}">Email</label>
+                    <div class="input-with-icon">
+                        <i class="fas fa-envelope"></i>
+                        {{ form.email }}
+                    </div>
+                    {% if form.email.errors %}
+                    <div class="form-error">{{ form.email.errors.as_text }}</div>
+                    {% endif %}
+                </div>
+            </div>
+            
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="{{ form.password1.id_for_label }}">Password</label>
+                    <div class="input-with-icon">
+                        <i class="fas fa-lock"></i>
+                        {{ form.password1 }}
+                    </div>
+                    {% if form.password1.errors %}
+                    <div class="form-error">{{ form.password1.errors.as_text }}</div>
+                    {% endif %}
+                </div>
+                
+                <div class="form-group">
+                    <label for="{{ form.password2.id_for_label }}">Confirm Password</label>
+                    <div class="input-with-icon">
+                        <i class="fas fa-lock"></i>
+                        {{ form.password2 }}
+                    </div>
+                    {% if form.password2.errors %}
+                    <div class="form-error">{{ form.password2.errors.as_text }}</div>
+                    {% endif %}
+                </div>
+            </div>
+            
+          
+            
+            <button type="submit" class="btn-auth">
+                <i class="fas fa-user-plus"></i> Create Account
+            </button>
+            
+            <div class="auth-divider">
+                <span>or</span>
+            </div>
+            
+            <div class="social-login">
+                <p>Sign up with social account</p>
+                <div class="social-buttons">
+                    <a href="#" class="btn-social google">
+                        <i class="fab fa-google"></i> Google
+                    </a>
+                    <a href="#" class="btn-social facebook">
+                        <i class="fab fa-facebook-f"></i> Facebook
+                    </a>
+                </div>
+            </div>
+        </form>
+        
+        <div class="auth-footer">
+            Already have an account? <a href="{% url 'login' %}">Sign in</a>
+        </div>
+    </div>
+    
+    <div class="auth-image">
+        <img src="{% static 'img/register.jpg' %}" alt="Artist creating work">
+    </div>
+</div>
+
+<style>
+    :root {
+        --primary-color: #6c5ce7;
+        --secondary-color: #636e72;
+        --error-color: #ff7675;
+        --light-color: #f5f6fa;
+        --border-radius: 8px;
+        --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        --transition: all 0.3s ease;
+    }
+    
+    .auth-container {
+        display: flex;
+        min-height: 100vh;
+        align-items: center;
+        background-color: var(--light-color);
+    }
+    
+    .auth-card {
+        flex: 1;
+        max-width: 500px;
+        padding: 3rem;
+        margin: 2rem auto;
+        background: white;
+        border-radius: var(--border-radius);
+        box-shadow: var(--shadow);
+    }
+    
+    .auth-header {
+        text-align: center;
+        margin-bottom: 2rem;
+    }
+    
+    .auth-header h2 {
+        font-size: 2rem;
+        color: var(--primary-color);
+        margin-bottom: 0.5rem;
+    }
+    
+    .auth-header p {
+        color: var(--secondary-color);
+    }
+    
+    .auth-form {
+        margin-top: 2rem;
+    }
+    
+    .form-row {
+        display: flex;
+        gap: 1rem;
+        margin-bottom: 1rem;
+    }
+    
+    .form-row .form-group {
+        flex: 1;
+    }
+    
+    .form-group {
+        margin-bottom: 1.5rem;
+    }
+    
+    .form-group label {
+        display: block;
+        margin-bottom: 0.5rem;
+        font-weight: 500;
+        color: var(--text-color);
+    }
+    
+    .input-with-icon {
+        position: relative;
+    }
+    
+    .input-with-icon i {
+        position: absolute;
+        left: 15px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: var(--secondary-color);
+    }
+    
+    .input-with-icon input {
+        width: 100%;
+        padding: 12px 15px 12px 45px;
+        border: 1px solid #ddd;
+        border-radius: var(--border-radius);
+        font-size: 1rem;
+        transition: var(--transition);
+    }
+    
+    .input-with-icon input:focus {
+        border-color: var(--primary-color);
+        box-shadow: 0 0 0 2px rgba(108, 92, 231, 0.2);
+        outline: none;
+    }
+    
+    .form-error {
+        color: var(--error-color);
+        font-size: 0.8rem;
+        margin-top: 0.3rem;
+    }
+    
+    .checkbox-container {
+        display: block;
+        position: relative;
+        padding-left: 30px;
+        cursor: pointer;
+        font-size: 0.9rem;
+        color: var(--secondary-color);
+        user-select: none;
+    }
+    
+    .checkbox-container input {
+        position: absolute;
+        opacity: 0;
+        cursor: pointer;
+        height: 0;
+        width: 0;
+    }
+    
+    .checkmark {
+        position: absolute;
+        top: 0;
+        left: 0;
+        height: 20px;
+        width: 20px;
+        background-color: white;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+    }
+    
+    .checkbox-container:hover input ~ .checkmark {
+        border-color: var(--primary-color);
+    }
+    
+    .checkbox-container input:checked ~ .checkmark {
+        background-color: var(--primary-color);
+        border-color: var(--primary-color);
+    }
+    
+    .checkmark:after {
+        content: "";
+        position: absolute;
+        display: none;
+    }
+    
+    .checkbox-container input:checked ~ .checkmark:after {
+        display: block;
+    }
+    
+    .checkbox-container .checkmark:after {
+        left: 7px;
+        top: 3px;
+        width: 5px;
+        height: 10px;
+        border: solid white;
+        border-width: 0 2px 2px 0;
+        transform: rotate(45deg);
+    }
+    
+    .checkbox-container a {
+        color: var(--primary-color);
+        text-decoration: none;
+    }
+    
+    .checkbox-container a:hover {
+        text-decoration: underline;
+    }
+    
+    .btn-auth {
+        width: 100%;
+        padding: 12px;
+        background-color: var(--primary-color);
+        color: white;
+        border: none;
+        border-radius: var(--border-radius);
+        font-size: 1rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: var(--transition);
+        margin-top: 1rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+    }
+    
+    .btn-auth:hover {
+        background-color: #5649c0;
+    }
+    
+    .alert-error {
+        background-color: #ffebee;
+        color: var(--error-color);
+        padding: 12px;
+        border-radius: var(--border-radius);
+        margin-bottom: 1.5rem;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-size: 0.9rem;
+    }
+    
+    .auth-divider {
+        display: flex;
+        align-items: center;
+        margin: 1.5rem 0;
+        color: var(--secondary-color);
+    }
+    
+    .auth-divider::before,
+    .auth-divider::after {
+        content: "";
+        flex: 1;
+        border-bottom: 1px solid #ddd;
+    }
+    
+    .auth-divider span {
+        padding: 0 1rem;
+    }
+    
+    .social-login {
+        text-align: center;
+        margin-bottom: 1.5rem;
+    }
+    
+    .social-login p {
+        color: var(--secondary-color);
+        margin-bottom: 1rem;
+    }
+    
+    .social-buttons {
+        display: flex;
+        gap: 1rem;
+    }
+    
+    .btn-social {
+        flex: 1;
+        padding: 10px;
+        border-radius: var(--border-radius);
+        text-decoration: none;
+        font-size: 0.9rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        transition: var(--transition);
+    }
+    
+    .btn-social.google {
+        background-color: #fff;
+        color: #db4437;
+        border: 1px solid #ddd;
+    }
+    
+    .btn-social.google:hover {
+        background-color: #f5f5f5;
+    }
+    
+    .btn-social.facebook {
+        background-color: #4267B2;
+        color: white;
+        border: 1px solid #4267B2;
+    }
+    
+    .btn-social.facebook:hover {
+        background-color: #3b5998;
+    }
+    
+    .auth-footer {
+        text-align: center;
+        color: var(--secondary-color);
+        margin-top: 1.5rem;
+    }
+    
+    .auth-footer a {
+        color: var(--primary-color);
+        text-decoration: none;
+        font-weight: 500;
+    }
+    
+    .auth-footer a:hover {
+        text-decoration: underline;
+    }
+    
+    .auth-image {
+        flex: 1;
+        height: 100vh;
+        overflow: hidden;
+        display: none;
+    }
+    
+    .auth-image img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+    
+    @media (min-width: 992px) {
+        .auth-container {
+            padding: 0;
+        }
+        
+        .auth-image {
+            display: block;
+        }
+    }
+    
+    @media (max-width: 768px) {
+        .form-row {
+            flex-direction: column;
+            gap: 0;
+        }
+    }
+    
+    @media (max-width: 576px) {
+        .auth-card {
+            padding: 2rem 1.5rem;
+            margin: 1rem;
+        }
+        
+        .social-buttons {
+            flex-direction: column;
+        }
+    }
+</style>
+{% endblock %}

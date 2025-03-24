@@ -1,0 +1,313 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Artist Platform{% endblock %}</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #5661ff;
+            --secondary-color: #6c757d;
+            --accent-color: #ff6b6b;
+            --light-bg: #f8f9fa;
+            --dark-bg: #212529;
+            --text-color: #212529;
+            --light-text: #f8f9fa;
+            --transition: all 0.3s ease;
+            --shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            --border-radius: 8px;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--light-bg);
+            color: var(--text-color);
+            line-height: 1.6;
+        }
+        
+        nav {
+            background: linear-gradient(135deg, var(--primary-color), #3a3fbd);
+            color: var(--light-text);
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: var(--shadow);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .logo i {
+            color: var(--accent-color);
+            border-radius: 20px;
+
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 1rem;
+        }
+        
+        .auth-links {
+            display: flex;
+            gap: 1rem;
+        }
+        
+        nav a {
+            color: var(--light-text);
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            border-radius: var(--border-radius);
+            transition: var(--transition);
+            font-weight: 500;
+        }
+        
+        nav a:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+            transform: translateY(-2px);
+        }
+        
+        .btn-primary {
+            background-color: var(--accent-color);
+            padding: 0.5rem 1rem;
+            border-radius: var(--border-radius);
+            font-weight: 600;
+        }
+        
+        .btn-primary:hover {
+            background-color: #ff5252;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 2rem;
+            background: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+        }
+        
+        .page-header {
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid var(--light-bg);
+        }
+        
+        .page-header h1 {
+            color: var(--primary-color);
+            font-size: 2rem;
+            font-weight: 600;
+        }
+        
+        .footer {
+            text-align: center;
+            margin-top: 3rem;
+            padding: 1.5rem;
+            background-color: var(--dark-bg);
+            color: var(--light-text);
+        }
+        
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            margin: 1rem 0;
+        }
+        
+        .footer-links a {
+            color: var(--light-text);
+            text-decoration: none;
+            transition: var(--transition);
+        }
+        
+        .footer-links a:hover {
+            color: var(--accent-color);
+        }
+        
+        .social-icons {
+            margin-top: 1rem;
+        }
+        
+        .social-icons a {
+            color: var(--light-text);
+            margin: 0 0.5rem;
+            font-size: 1.2rem;
+            transition: var(--transition);
+        }
+        .video-container {
+            position: relative;
+            width: 100%;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .video-bg {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            min-width: 100%;
+            min-height: 100%;
+            width: auto;
+            height: auto;
+            z-index: -1;
+        }
+
+        .video-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(86, 97, 255, 0.5); /* Primary color with 50% opacity */
+            z-index: 0;
+        }
+
+        .video-content {
+            position: relative;
+            z-index: 1;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            text-align: center;
+            padding: 2rem;
+        }
+
+        .video-content h1 {
+            font-size: 3.5rem;
+            margin-bottom: 1.5rem;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+
+        .video-content p {
+            font-size: 1.5rem;
+            margin-bottom: 2rem;
+            max-width: 800px;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+        }
+
+
+        
+        .social-icons a:hover {
+            color: var(--accent-color);
+            transform: translateY(-3px);
+        }
+        
+        /* Media Queries */
+        @media (max-width: 768px) {
+            nav {
+                flex-direction: column;
+                padding: 1rem;
+            }
+            
+            .nav-links, .auth-links {
+                margin-top: 1rem;
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+            
+            .container {
+                padding: 1rem;
+                margin: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Navbar -->
+    <nav>
+        <div class="logo">
+            <a href="{% url 'index' %}">
+                <img src="{% static 'img/logo.jpg' %}" alt="Artist Platform Logo" width="50" border-radius: 20px;
+                >
+                <span>Artist </span>
+            </a>
+        </div>
+        
+        <div class="nav-links">
+            <a href="{% url 'hire_artists' %}"><i class="fas fa-users"></i> Artists on Hire</a>
+            {% if user.is_superuser %}
+                <a href="{% url 'add_artist' %}"><i class="fas fa-user-plus"></i> Add Artist</a>
+            {% endif %}
+        </div>
+        <div class="auth-links">
+            {% if user.is_authenticated %}
+                <a href="{% url 'logout' %}"><i class="fas fa-sign-out-alt"></i> Logout</a>
+            {% else %}
+                <a href="{% url 'login' %}"><i class="fas fa-sign-in-alt"></i> Login</a>
+                <a href="{% url 'register' %}" class="btn-primary"><i class="fas fa-user-plus"></i> Register</a>
+            {% endif %}
+        </div>
+    </nav>
+    
+
+    <!-- Main Content -->
+    <div class="container">
+        <div class="page-header">
+            <h1>{% block header %}Welcome to Artist Platform{% endblock %}</h1>
+        </div>
+        {% block content %}
+        {% endblock %}
+        <section class="hero-section">
+            <!-- Video Background -->
+            <!-- <video class="video-background" autoplay muted loop>
+                <source src="{% static 'vid/bg-vid.mp4' %}"  type="video/mp4">
+                Your browser does not support the video tag.
+            </video> -->
+            <!-- Blue Overlay -->
+            <div class="overlay"></div>
+            
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-6" data-aos="fade-right" data-aos-duration="1000">
+                        <h1 >Global Logistics Solutions for Your Business</h1>
+                        <p class="lead mb-4" style="color: black; font-size: 20px;">Innovative, reliable and efficient logistics 
+                            services tailored to meet your business needs worldwide.</p>
+                        <!-- <a href="#" class="btn btn-light btn-lg px-4 me-2">Our Services</a> -->
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-links">
+            <a href="#">About Us</a>
+            <a href="#">Services</a>
+            <a href="#">Contact</a>
+            <a href="#">Privacy Policy</a>
+        </div>
+        <div class="social-icons">
+            <a href="#"><i class="fab fa-facebook"></i></a>
+            <a href="#"><i class="fab fa-twitter"></i></a>
+            <a href="#"><i class="fab fa-instagram"></i></a>
+            <a href="#"><i class="fab fa-linkedin"></i></a>
+        </div>
+        <p>&copy; {% now "Y" %} Artist Platform. All rights reserved.</p>
+    </footer>
+
+</body>
+</html>
