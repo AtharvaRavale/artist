@@ -1,34 +1,34 @@
 {% extends 'base.html' %}
-{% load static %}
 
 {% block title %}Artists on Hire | Creative Talent Hub{% endblock %}
 
 {% block content %}
 <div class="artists-container">
     <div class="artists-header">
-        <h1>Discover Exceptional Creative Talent</h1>
-        <p>Browse our curated selection of professional artists ready for your next project</p>
+        <h2>Artists Available for Hire</h2>
+        <p>Discover talented creatives ready for your next project</p>
         
         <!-- <div class="search-filter">
             <form method="GET" class="search-form">
                 <div class="search-input">
                     <i class="fas fa-search"></i>
-                    <input type="text" name="q" placeholder="Search by skill, name, or keyword" value="{{ request.GET.q }}">
+                    <input type="text" name="q" placeholder="Search by name, skill, or location" value="{{ request.GET.q }}">
                 </div>
-                <!-- <select name="expertise">
+                <select name="expertise">
                     <option value="">All Categories</option>
                     {% for category in categories %}
                     <option value="{{ category }}" {% if request.GET.expertise == category %}selected{% endif %}>{{ category }}</option>
                     {% endfor %}
-                <button type="submit" class="btn-search">Apply Filters</button>
+                </select>
+                <button type="submit" class="btn-search">Search</button>
                 {% if request.GET.q or request.GET.expertise %}
-                <a href="{% url 'hire_artists' %}" class="btn-clear">Clear All</a>
+                <a href="{% url 'hire_artists' %}" class="btn-clear">Clear</a>
                 {% endif %}
             </form>
         </div> -->
     </div>
 
-    <div class="artists-grid">
+    <div class="artist-list">
         {% for artist in artists %}
         <div class="artist-card">
             <div class="artist-image">
@@ -44,14 +44,19 @@
             </div>
             
             <div class="artist-info">
-                <h3>{{ artist.name }}</h3>
+                <h3><a href="{% url 'artist_detail' artist.id %}">{{ artist.name }}</a></h3>
                 <div class="artist-meta">
                     <span class="expertise"><i class="fas fa-paint-brush"></i> {{ artist.expertise }}</span>
-                    <span class="location"><i class="fas fa-map-marker-alt"></i> {{ artist.location|default:"Remote" }}</span>
+                    {% if artist.location %}
+                    <span class="location"><i class="fas fa-map-marker-alt"></i> {{ artist.location }}</span>
+                    {% endif %}
                 </div>
                 
-                <p class="artist-bio">{{ artist.bio|truncatechars:150 }}</p>
+                {% if artist.bio %}
+                <p class="artist-bio">{{ artist.bio|truncatechars:120 }}</p>
+                {% endif %}
                 
+                {% if artist.skills.all %}
                 <div class="artist-skills">
                     {% for skill in artist.skills.all|slice:":3" %}
                     <span class="skill-tag">{{ skill.name }}</span>
@@ -60,15 +65,18 @@
                     <span class="skill-tag">+{{ artist.skills.count|add:"-3" }} more</span>
                     {% endif %}
                 </div>
+                {% endif %}
                 
-                <!--  -->
+                <div class="artist-actions">
+                    <a href="{% url 'artist_detail' artist.id %}" class="btn-view">View Profile</a>
+                </div>
             </div>
         </div>
         {% empty %}
         <div class="no-results">
             <i class="fas fa-palette"></i>
-            <h3>No artists found matching your criteria</h3>
-            <p>Try adjusting your search filters or <a href="{% url 'hire_artists' %}">browse all artists</a></p>
+            <h3>No artists found</h3>
+            <p>Try adjusting your search or <a href="{% url 'hire_artists' %}">browse all artists</a></p>
         </div>
         {% endfor %}
     </div>
@@ -116,27 +124,27 @@
     
     .artists-header {
         text-align: center;
-        margin-bottom: 3rem;
+        margin-bottom: 2rem;
     }
     
-    .artists-header h1 {
-        font-size: 2.5rem;
+    .artists-header h2 {
+        font-size: 2rem;
         color: var(--primary-color);
-        margin-bottom: 1rem;
+        margin-bottom: 0.5rem;
     }
     
     .artists-header p {
         font-size: 1.1rem;
         color: var(--secondary-color);
-        margin-bottom: 2rem;
+        margin-bottom: 1.5rem;
     }
     
     .search-filter {
         background: white;
-        padding: 1.5rem;
+        padding: 1rem;
         border-radius: var(--border-radius);
         box-shadow: var(--shadow);
-        margin: 0 auto;
+        margin: 0 auto 2rem;
         max-width: 800px;
     }
     
@@ -163,22 +171,22 @@
     
     .search-input input {
         width: 100%;
-        padding: 12px 15px 12px 45px;
+        padding: 10px 15px 10px 40px;
         border: 1px solid #ddd;
         border-radius: var(--border-radius);
         font-size: 1rem;
     }
     
     .search-form select {
-        padding: 12px 15px;
+        padding: 10px 15px;
         border: 1px solid #ddd;
         border-radius: var(--border-radius);
         font-size: 1rem;
-        min-width: 200px;
+        min-width: 180px;
     }
     
     .btn-search {
-        padding: 12px 20px;
+        padding: 10px 20px;
         background-color: var(--primary-color);
         color: white;
         border: none;
@@ -192,7 +200,7 @@
     }
     
     .btn-clear {
-        padding: 12px 20px;
+        padding: 10px 15px;
         color: var(--secondary-color);
         text-decoration: none;
         border-radius: var(--border-radius);
@@ -201,13 +209,14 @@
     
     .btn-clear:hover {
         color: var(--primary-color);
+        background: var(--light-color);
     }
     
-    .artists-grid {
+    .artist-list {
         display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
-        gap: 2rem;
-        margin: 3rem 0;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: 1.5rem;
+        margin: 2rem 0;
     }
     
     .artist-card {
@@ -220,13 +229,14 @@
     
     .artist-card:hover {
         transform: translateY(-5px);
-        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
     }
     
     .artist-image {
         position: relative;
-        height: 200px;
+        height: 180px;
         background-color: #f0f2f5;
+        overflow: hidden;
     }
     
     .artist-image img {
@@ -240,7 +250,7 @@
         align-items: center;
         justify-content: center;
         height: 100%;
-        font-size: 3rem;
+        font-size: 2.5rem;
         font-weight: bold;
         color: var(--primary-color);
         background-color: #e6e9f2;
@@ -252,77 +262,87 @@
         right: 10px;
         background: rgba(0, 0, 0, 0.7);
         color: white;
-        padding: 5px 10px;
+        padding: 4px 8px;
         border-radius: var(--border-radius);
         display: flex;
         align-items: center;
-        gap: 5px;
+        gap: 4px;
+        font-size: 0.9rem;
     }
     
     .stars {
         color: #fdcb6e;
     }
     
-    .rating-value {
-        font-size: 0.9rem;
-    }
-    
     .artist-info {
-        padding: 1.5rem;
+        padding: 1.25rem;
     }
     
     .artist-info h3 {
         margin: 0 0 0.5rem;
-        font-size: 1.3rem;
+        font-size: 1.2rem;
+    }
+    
+    .artist-info h3 a {
+        color: #333;
+        text-decoration: none;
+        transition: var(--transition);
+    }
+    
+    .artist-info h3 a:hover {
+        color: var(--primary-color);
     }
     
     .artist-meta {
         display: flex;
-        gap: 1rem;
-        margin-bottom: 1rem;
+        flex-wrap: wrap;
+        gap: 0.8rem;
+        margin-bottom: 0.8rem;
         font-size: 0.9rem;
         color: var(--secondary-color);
     }
     
     .artist-meta i {
-        margin-right: 5px;
+        margin-right: 4px;
     }
     
     .artist-bio {
         color: var(--secondary-color);
-        margin-bottom: 1.5rem;
-        line-height: 1.5;
+        margin-bottom: 1rem;
+        line-height: 1.4;
+        font-size: 0.9rem;
     }
     
     .artist-skills {
         display: flex;
         flex-wrap: wrap;
         gap: 0.5rem;
-        margin-bottom: 1.5rem;
+        margin-bottom: 1.25rem;
     }
     
     .skill-tag {
         background: var(--light-color);
         color: var(--secondary-color);
-        padding: 5px 10px;
+        padding: 4px 10px;
         border-radius: 20px;
         font-size: 0.8rem;
     }
     
     .artist-actions {
         display: flex;
-        gap: 1rem;
+        gap: 0.8rem;
     }
     
     .btn-view {
         flex: 1;
-        padding: 10px;
+        padding: 8px;
         background: white;
         color: var(--primary-color);
         border: 1px solid var(--primary-color);
         border-radius: var(--border-radius);
         text-align: center;
         text-decoration: none;
+        font-size: 0.9rem;
         transition: var(--transition);
     }
     
@@ -332,13 +352,14 @@
     
     .btn-hire {
         flex: 1;
-        padding: 10px;
+        padding: 8px;
         background: var(--primary-color);
         color: white;
         border: 1px solid var(--primary-color);
         border-radius: var(--border-radius);
         text-align: center;
         text-decoration: none;
+        font-size: 0.9rem;
         transition: var(--transition);
     }
     
@@ -350,6 +371,9 @@
         grid-column: 1 / -1;
         text-align: center;
         padding: 3rem;
+        background: white;
+        border-radius: var(--border-radius);
+        box-shadow: var(--shadow);
     }
     
     .no-results i {
@@ -369,17 +393,18 @@
     .pagination {
         display: flex;
         justify-content: center;
-        gap: 1rem;
-        margin: 3rem 0;
+        gap: 0.8rem;
+        margin: 2rem 0;
     }
     
     .page-link {
-        padding: 8px 15px;
+        padding: 8px 12px;
         border: 1px solid #ddd;
         border-radius: var(--border-radius);
         text-decoration: none;
         color: var(--secondary-color);
         transition: var(--transition);
+        font-size: 0.9rem;
     }
     
     .page-link:hover {
@@ -387,24 +412,21 @@
     }
     
     .current-page {
-        padding: 8px 15px;
+        padding: 8px 12px;
         background: var(--primary-color);
         color: white;
         border-radius: var(--border-radius);
+        font-size: 0.9rem;
     }
     
     @media (max-width: 768px) {
-        .artists-grid {
+        .artist-list {
             grid-template-columns: 1fr;
         }
         
         .search-form {
             flex-direction: column;
             align-items: stretch;
-        }
-        
-        .artist-actions {
-            flex-direction: column;
         }
     }
 </style>

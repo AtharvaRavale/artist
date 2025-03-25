@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect,get_object_or_404
 from django.contrib.auth import authenticate, login, logout
 from .forms import UserRegisterForm
 
@@ -108,3 +108,41 @@ def admin_logout(request):
     """Logout admin and redirect to login"""
     logout(request)
     return redirect('admin_login')
+
+
+def artist_detail(request, artist_id):
+    """Display artist details dynamically"""
+    artist = get_object_or_404(Artist, id=artist_id)
+    return render(request, "accounts/artist_detail.html", {"artist": artist})
+
+
+
+
+
+@login_required
+@user_passes_test(is_admin)
+def update_artist(request, artist_id):
+    """Allow admin to update artist details"""
+    artist = get_object_or_404(Artist, id=artist_id)
+
+    if request.method == "POST":
+        form = ArtistForm(request.POST, request.FILES, instance=artist)
+        if form.is_valid():
+            form.save()
+            return redirect("artist_detail", artist_id=artist.id)
+    else:
+        form = ArtistForm(instance=artist)
+
+    return render(request, "accounts/update_artist.html", {"form": form, "artist": artist})
+
+@login_required
+@user_passes_test(is_admin)
+def delete_artist(request, artist_id):
+    """Allow admin to delete an artist"""
+    artist = get_object_or_404(Artist, id=artist_id)
+
+    if request.method == "POST":
+        artist.delete()
+        return redirect("hire_artists")
+
+    return render(request, "accounts/delete_artist.html", {"artist": artist})

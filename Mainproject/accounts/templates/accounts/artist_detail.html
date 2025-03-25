@@ -1,0 +1,342 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ artist.name }} | Creative Talent Hub{% endblock %}
+
+{% block content %}
+<div class="artist-detail-container">
+    <div class="artist-header">
+        <a href="{% url 'hire_artists' %}" class="back-link">
+            <i class="fas fa-arrow-left"></i> Back to Artists
+        </a>
+        <h1>{{ artist.name }}</h1>
+        <div class="artist-meta">
+            <span class="expertise"><i class="fas fa-paint-brush"></i> {{ artist.expertise }}</span>
+            {% if artist.location %}
+            <span class="location"><i class="fas fa-map-marker-alt"></i> {{ artist.location }}</span>
+            {% endif %}
+            <span class="rating"><i class="fas fa-star"></i> 4.8 (24 reviews)</span>
+        </div>
+    </div>
+
+    <div class="artist-content">
+        <div class="artist-main">
+            <div class="artist-image-container">
+                {% if artist.image %}
+                <img src="{{ artist.image.url }}" alt="{{ artist.name }}" class="artist-image">
+                {% else %}
+                <div class="artist-initials">{{ artist.name|slice:":2"|upper }}</div>
+                {% endif %}
+                <div class="artist-actions">
+                        <i class="fas fa-envelope"></i> Contact Artist
+                    </a>
+                    {% if artist.portfolio_url %}
+                    <a href="{{ artist.portfolio_url }}" target="_blank" class="btn-portfolio">
+                        <i class="fas fa-external-link-alt"></i> View Portfolio
+                    </a>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="artist-info">
+                <h2>About the Artist</h2>
+                <div class="bio">{{ artist.bio|linebreaks }}</div>
+                
+                {% if artist.skills.all %}
+                <div class="skills-section">
+                    <h3>Skills & Expertise</h3>
+                    <div class="skills-list">
+                        {% for skill in artist.skills.all %}
+                        <span class="skill-tag">{{ skill.name }}</span>
+                        {% endfor %}
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="artist-sidebar">
+            <div class="sidebar-section">
+                <h3>Availability</h3>
+                <p><i class="fas fa-calendar-check"></i> Currently accepting projects</p>
+                <p><i class="fas fa-clock"></i> Typically responds within 24 hours</p>
+            </div>
+
+            <div class="sidebar-section">
+                <h3>Added By</h3>
+                <div class="added-by">
+                    <i class="fas fa-user-circle"></i>
+                    <span>{{ artist.added_by.username }}</span>
+                </div>
+                <p class="join-date">Member since {{ artist.added_by.date_joined|date:"F Y" }}</p>
+            </div>
+            {% if user.is_staff %}
+            <a href="{% url 'update_artist' artist.id %}" style="border: 2px solid black; color: black; padding: 10px; border-radius: 20px; text-decoration: none;  background-color: rgb(64, 139, 158);">Edit</a>
+            <a href="{% url 'delete_artist' artist.id %}" style="border: 2px solid black; color: black; padding: 10px; border-radius: 20px; text-decoration: none;  background-color: rgb(64, 139, 158);">Delete</a>
+        {% endif %}
+
+            {% if artist.portfolio_url or artist.email %}
+            <div class="sidebar-section">
+                <h3>Contact</h3>
+                {% if artist.email %}
+                <p><i class="fas fa-envelope"></i> {{ artist.email }}</p>
+                {% endif %}
+                {% if artist.portfolio_url %}
+                <p><i class="fas fa-globe"></i> <a href="{{ artist.portfolio_url }}" target="_blank">Portfolio Website</a></p>
+                {% endif %}
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<style>
+    :root {
+        --primary-color: #6c5ce7;
+        --secondary-color: #636e72;
+        --light-color: #f5f6fa;
+        --border-radius: 8px;
+        --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        --transition: all 0.3s ease;
+    }
+    
+    .artist-detail-container {
+        max-width: 1200px;
+        margin: 2rem auto;
+        padding: 0 1rem;
+    }
+    
+    .back-link {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        color: var(--primary-color);
+        text-decoration: none;
+        margin-bottom: 1rem;
+        font-size: 0.95rem;
+    }
+    
+    .back-link:hover {
+        text-decoration: underline;
+    }
+    
+    .artist-header {
+        margin-bottom: 2rem;
+    }
+    
+    .artist-header h1 {
+        font-size: 2.2rem;
+        color: #333;
+        margin: 0.5rem 0;
+    }
+    
+    .artist-meta {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 1.5rem;
+        color: var(--secondary-color);
+        margin-bottom: 1rem;
+    }
+    
+    .artist-meta i {
+        margin-right: 5px;
+        color: var(--primary-color);
+    }
+    
+    .artist-content {
+        display: flex;
+        gap: 2rem;
+        flex-wrap: wrap;
+    }
+    
+    .artist-main {
+        flex: 1;
+        min-width: 300px;
+    }
+    
+    .artist-sidebar {
+        width: 300px;
+    }
+    
+    .artist-image-container {
+        margin-bottom: 2rem;
+        position: relative;
+    }
+    
+    .artist-image {
+        width: 100%;
+        max-height: 500px;
+        object-fit: cover;
+        border-radius: var(--border-radius);
+        box-shadow: var(--shadow);
+    }
+    
+    .artist-initials {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 300px;
+        background: #e6e9f2;
+        border-radius: var(--border-radius);
+        font-size: 5rem;
+        font-weight: bold;
+        color: var(--primary-color);
+    }
+    
+    .artist-actions {
+        display: flex;
+        gap: 1rem;
+        margin-top: 1.5rem;
+        flex-wrap: wrap;
+    }
+    
+    .btn-hire {
+        padding: 12px 20px;
+        background: var(--primary-color);
+        color: white;
+        border-radius: var(--border-radius);
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        transition: var(--transition);
+        flex: 1;
+        min-width: 200px;
+        justify-content: center;
+    }
+    
+    .btn-hire:hover {
+        background: #5649c0;
+        transform: translateY(-2px);
+    }
+    
+    .btn-portfolio {
+        padding: 12px 20px;
+        background: white;
+        color: var(--primary-color);
+        border: 1px solid var(--primary-color);
+        border-radius: var(--border-radius);
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        transition: var(--transition);
+        flex: 1;
+        min-width: 200px;
+        justify-content: center;
+    }
+    
+    .btn-portfolio:hover {
+        background: #f0f2ff;
+        transform: translateY(-2px);
+    }
+    
+    .artist-info h2 {
+        color: var(--primary-color);
+        margin-bottom: 1rem;
+        font-size: 1.5rem;
+    }
+    
+    .bio {
+        line-height: 1.6;
+        color: #444;
+        margin-bottom: 2rem;
+    }
+    
+    .skills-section {
+        margin-bottom: 2rem;
+    }
+    
+    .skills-section h3 {
+        color: var(--primary-color);
+        margin-bottom: 1rem;
+        font-size: 1.2rem;
+    }
+    
+    .skills-list {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+    }
+    
+    .skill-tag {
+        background: var(--light-color);
+        color: var(--secondary-color);
+        padding: 6px 12px;
+        border-radius: 20px;
+        font-size: 0.9rem;
+    }
+    
+    .sidebar-section {
+        background: white;
+        padding: 1.5rem;
+        border-radius: var(--border-radius);
+        box-shadow: var(--shadow);
+        margin-bottom: 1.5rem;
+    }
+    
+    .sidebar-section h3 {
+        color: var(--primary-color);
+        margin-top: 0;
+        margin-bottom: 1rem;
+        font-size: 1.2rem;
+    }
+    
+    .sidebar-section p {
+        margin: 0.8rem 0;
+        color: #444;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+    
+    .sidebar-section i {
+        color: var(--primary-color);
+        width: 20px;
+    }
+    
+    .sidebar-section a {
+        color: var(--primary-color);
+        text-decoration: none;
+    }
+    
+    .sidebar-section a:hover {
+        text-decoration: underline;
+    }
+    
+    .added-by {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 0.5rem;
+    }
+    
+    .added-by i {
+        font-size: 1.5rem;
+    }
+    
+    .join-date {
+        font-size: 0.9rem;
+        color: var(--secondary-color);
+        margin-left: 28px;
+    }
+    
+    @media (max-width: 768px) {
+        .artist-content {
+            flex-direction: column;
+        }
+        
+        .artist-sidebar {
+            width: 100%;
+        }
+        
+        .artist-actions {
+            flex-direction: column;
+        }
+        
+        .btn-hire,
+        .btn-portfolio {
+            width: 100%;
+        }
+    }
+</style>
+{% endblock %}
