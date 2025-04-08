@@ -18,11 +18,18 @@ from django.contrib import admin
 from django.urls import path,include
 from django.conf import settings
 from django.conf.urls.static import static
+from django.views.generic import TemplateView
+
 
 urlpatterns = [
     path('admin/', admin.site.urls),
    
     path("", include("accounts.urls")),  # Include accounts app URLs
+    path('about_us/', TemplateView.as_view(template_name='accounts/about_us.html'), name='about_us'),
+    path('service/', TemplateView.as_view(template_name='accounts/service.html'), name='service'),
+    path('contact/', TemplateView.as_view(template_name='accounts/contact.html'), name='contact'),
+
+
 
 
 ]

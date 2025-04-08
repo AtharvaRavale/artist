@@ -240,7 +240,7 @@
     <nav>
         <div class="logo">
             <a href="{% url 'index' %}">
-                <img src="{% static 'img/logo.jpg' %}" alt="Artist Platform Logo" width="50" border-radius: 20px;
+                <img src="{% static 'img/logo.jpg' %}"    style="border-radius: 30px;" alt="Artist Platform Logo" width="50" border-radius: 20px;
                 >
                 <span>Artist </span>
             </a>
@@ -248,6 +248,8 @@
         
         <div class="nav-links">
             <a href="{% url 'hire_artists' %}"><i class="fas fa-users"></i> Artists on Hire</a>
+            <a href="{% url 'contact' %}"><i class="fas fa-users"></i> Want to be an ARTIST?</a>
+
             {% if user.is_superuser %}
                 <a href="{% url 'add_artist' %}"><i class="fas fa-user-plus"></i> Add Artist</a>
             {% endif %}
@@ -258,6 +260,11 @@
             {% else %}
                 <a href="{% url 'login' %}"><i class="fas fa-sign-in-alt"></i> Login</a>
                 <a href="{% url 'register' %}" class="btn-primary"><i class="fas fa-user-plus"></i> Register</a>
+                <!-- <a href="{% url 'register' %}" class="btn-primary"><i class="fas fa-user-plus"></i> Register</a>
+                <a href="{% url 'register' %}" class="btn-primary"><i class="fas fa-user-plus"></i> Register</a>
+                <a href="{% url 'register' %}" class="btn-primary"><i class="fas fa-user-plus"></i> Register</a> -->
+
+
             {% endif %}
         </div>
     </nav>
@@ -295,10 +302,9 @@
     <!-- Footer -->
     <footer class="footer">
         <div class="footer-links">
-            <a href="#">About Us</a>
-            <a href="#">Services</a>
-            <a href="#">Contact</a>
-            <a href="#">Privacy Policy</a>
+            <a href="{% url 'about_us' %}">About Us</a>
+            <a href="{% url 'service' %}">Services</a>
+            <a href="{% url 'contact' %}">Contact</a>
         </div>
         <div class="social-icons">
             <a href="#"><i class="fab fa-facebook"></i></a>

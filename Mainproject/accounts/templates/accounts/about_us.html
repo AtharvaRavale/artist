@@ -1,0 +1,142 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}About Us - Artist Platform{% endblock %}
+
+{% block header %}About Artist Platform{% endblock %}
+
+{% block content %}
+    <div class="about-section">
+        <div class="row">
+            <div class="col-md-6">
+                <img src="{% static 'img/abt-4.webp' %}" alt="Our Artists" class="img-fluid rounded" style="max-height: 400px;">
+            </div>
+            <div class="col-md-6">
+                <h2 class="mb-4" style="color: var(--primary-color);">Our Story</h2>
+                <p class="lead">Connecting artists with opportunities since 2023.</p>
+                <p>Artist Platform was founded with a simple mission: to create a space where talented artists can showcase their work and connect with clients who appreciate their craft. What started as a small community has grown into a vibrant network of thousands of artists across multiple disciplines.</p>
+            </div>
+        </div>
+
+        <div class="mission-section mt-5">
+            <h2 class="mb-4" style="color: var(--primary-color);">Our Mission</h2>
+            <div class="row">
+                <div class="col-md-4 mb-4">
+                    <div class="card h-100 shadow-sm">
+                        <div class="card-body">
+                            <i class="fas fa-palette fa-3x mb-3" style="color: var(--accent-color);"></i>
+                            <h4>Empower Artists</h4>
+                            <p>We provide tools and opportunities for artists to grow their careers and reach new audiences.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-4">
+                    <div class="card h-100 shadow-sm">
+                        <div class="card-body">
+                            <i class="fas fa-handshake fa-3x mb-3" style="color: var(--accent-color);"></i>
+                            <h4>Connect Creatives</h4>
+                            <p>Our platform bridges the gap between talented artists and clients seeking their unique skills.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-4">
+                    <div class="card h-100 shadow-sm">
+                        <div class="card-body">
+                            <i class="fas fa-globe fa-3x mb-3" style="color: var(--accent-color);"></i>
+                            <h4>Build Community</h4>
+                            <p>We foster a supportive environment where artists can collaborate and inspire each other.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="team-section mt-5">
+            <h2 class="mb-4" style="color: var(--primary-color);">Meet the Team</h2>
+            <div class="row">
+                <div class="col-md-3 mb-4">
+                    <div class="card h-100 shadow-sm">
+                        <img src="{% static 'img/abt-5.jpg' %}" class="card-img-top" alt="Team Member">
+                        <div class="card-body">
+                            <h5>Alex Johnson</h5>
+                            <p class="text-muted">Founder & CEO</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3 mb-4">
+                    <div class="card h-100 shadow-sm">
+                        <img src="{% static 'img/best-about1.webp' %}" class="card-img-top" alt="Team Member">
+                        <div class="card-body">
+                            <h5>Sarah Chen</h5>
+                            <p class="text-muted">Creative Director</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3 mb-4">
+                    <div class="card h-100 shadow-sm">
+                        <img src="{% static 'img/abt-3.png' %}" class="card-img-top" alt="Team Member">
+                        <div class="card-body">
+                            <h5>Marcus Lee</h5>
+                            <p class="text-muted">Tech Lead</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3 mb-4">
+                    <div class="card h-100 shadow-sm">
+                        <img src="{% static 'img/abtn.jpg' %}" class="card-img-top" alt="Team Member">
+                        <div class="card-body">
+                            <h5>Jamie Smith</h5>
+                            <p class="text-muted">Community Manager</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="cta-section text-center py-5 mt-4" style="background-color: var(--light-bg); border-radius: var(--border-radius);">
+            <h2 class="mb-3">Ready to join our community?</h2>
+            <p class="lead mb-4">Whether you're an artist looking to showcase your work or a client seeking creative talent, we'd love to have you.</p>
+            <a href="{% url 'register' %}" class="btn btn-primary btn-lg px-4" style="background-color: var(--accent-color); border: none;">Get Started</a>
+        </div>
+    </div>
+
+    <style>
+        .about-section {
+            padding: 2rem 0;
+        }
+        
+        .card {
+            transition: var(--transition);
+            border: none;
+            border-radius: var(--border-radius);
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+        
+        .img-fluid {
+            max-width: 100%;
+            height: auto;
+            object-fit: cover;
+        }
+        
+        .cta-section {
+            box-shadow: var(--shadow);
+        }
+        
+        .btn-primary {
+            background-color: var(--accent-color);
+            padding: 0.75rem 1.5rem;
+            font-size: 1.1rem;
+            font-weight: 600;
+            transition: var(--transition);
+        }
+        
+        .btn-primary:hover {
+            background-color: #ff5252;
+            transform: translateY(-2px);
+        }
+    </style>
+{% endblock %}
